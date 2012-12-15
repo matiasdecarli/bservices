@@ -13,7 +13,7 @@
 	$res = mysql_query($sql);
 
 	while ($fila = mysql_fetch_array($res)){
-		$data[]= $fila['name'].','.$fila['location'];
+		$data[]= $fila['name'].';'.$fila['location'];
 	}	
 
 	echo json_encode($data);

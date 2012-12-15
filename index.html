@@ -2,7 +2,7 @@
 <!-- saved from url=(0030)http://bootswatch.com/simplex/ -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Bootswatch: Simplex</title>
+    <title>Basic Services</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Mini and minimalist.">
     <meta name="author" content="Thomas Park">
@@ -26,18 +26,62 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsFBlXOlKir-wVms5iGYt4-zOi1dzV6Tg&sensor=false">
     </script>
     <script type="text/javascript">
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(18.312811,2.8125),
-          zoom: 2,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            mapOptions);
-      }
-    </script>    
 
-<body class="preview" data-spy="scroll" data-target=".subnav" data-offset="80" onload="initialize()">     
+        //retrieve events        
+            $.ajax({
+              type: 'POST',         
+              url: 'getEvents.php',
+              //dataType: 'json',
+              data: {action: 'combo'},
+              success: function(data) {     
+
+                var  mapOptions = {
+                  center: new google.maps.LatLng(18.312811,2.8125),
+                  zoom: 2,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };        
+              
+                var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);                        
+                console.log(data);
+                $.each(data,function(id,val){  
+                    
+                    var location = val.split(";");
+                    latLang = location[1].split(",")
+
+                    var myLatlng = new google.maps.LatLng(latLang[0],latLang[1]);
+
+                    var mapOptions = {
+                      center: myLatlng,
+                      zoom: 2,
+                      mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                              
+                    //put the marker             
+                    var marker = new google.maps.Marker({
+                        position: myLatlng,
+                        animation: google.maps.Animation.DROP,
+                        map: map,
+                        title:location[0]
+                    });  
+
+                     // Start of newly added code block
+                    var contentString = '<div> Event: ' + location[0] + '<br>' + 'Location: ' + location[1] + '</div>' +
+                                      '<a href="events#' + location[0] + '" title="Go"> Ir al evento</a>';           
+
+                    var infowindow = new google.maps.InfoWindow({
+                                                                  content: contentString,
+                                                                  width:122,
+                                                                  height:60
+                                                               });
+
+                    infowindow.open(map,marker);                             
+                });
+              }     
+        });  
+    
+    </script>  
+ </head> 
+<body class="preview" data-spy="scroll" data-target=".subnav" data-offset="80">     
     <div id="map_canvas" style="width:80%; height:80%; margin: 60px 0px 0px 150px"></div>  
 
   <!-- Navbar
@@ -50,11 +94,11 @@
          <span class="icon-bar"></span>
          <span class="icon-bar"></span>
        </a>
-       <a class="brand" href="http://bootswatch.com/">Bootswatch</a>
+       <a class="brand" href="#">Basic Services</a>
        <div class="nav-collapse" id="main-menu">
         <ul class="nav" id="main-menu-left">
-          <li><a href="#">Index</a></li>
-          <li><a href="styles.html">Style</a></li>
+          <li><a href="events.html">Events Test</a></li>
+          <li><a href="styles.html">Style Test</a></li>
         </ul>    
        </div>
      </div>
@@ -85,7 +129,7 @@
 
             var mapOptions = {
               center: myLatlng,
-              zoom: 14,
+              zoom: 12,
               mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("map_canvas"),
@@ -93,24 +137,7 @@
  
             document.getElementById("locationHolder").innerHTML = 
                         "Your current location is: (" + position.coords.latitude + ", " + position.coords.longitude + ")";   
-
-            //put the marker             
-             var marker = new google.maps.Marker({
-                position: myLatlng,
-                animation: google.maps.Animation.DROP,
-                map: map,
-                title:"You are Here!"
-            });    
-            google.maps.event.addListener(marker, 'click', toggleBounce);     
-
-            function toggleBounce() {
-
-              if (marker.getAnimation() != null) {
-                marker.setAnimation(null);
-              } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-              }
-            }
+            
                         
         }
  
@@ -129,19 +156,7 @@
                     message.innerHTML = "An unknown error occurred. Try again later."
                     break;
             }
-        }
-
-        //retrieve events        
-            $.ajax({
-              type: 'POST',         
-              url: 'getEvents.php',
-              data: {action: 'combo'},
-              success: function(data) {         
-                data.each(data,function(index, value){
-                    alert(index);
-                });
-              }     
-        });        
+        }      
     </script>  
 </div><!-- /container -->
 
