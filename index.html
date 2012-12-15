@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)http://bootswatch.com/simplex/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Bootswatch: Simplex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mini and minimalist.">
+    <meta name="author" content="Thomas Park">
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="http://bootswatch.com/simplex/bootstrap.min.css" rel="stylesheet">
+    <link href="http://bootswatch.com/default/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="http://bootswatch.com/css/bootswatch.css" rel="stylesheet">
+  
+   <!--google maps API-->
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsFBlXOlKir-wVms5iGYt4-zOi1dzV6Tg&sensor=false">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(18.312811,2.8125),
+          zoom: 2,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+      }
+    </script>    
+
+<body class="preview" data-spy="scroll" data-target=".subnav" data-offset="80" onload="initialize()">     
+    <div id="map_canvas" style="width:80%; height:80%; margin: 60px 0px 0px 150px"></div>  
+
+  <!-- Navbar
+    ================================================== -->
+ <div class="navbar navbar-fixed-top">
+   <div class="navbar-inner">
+     <div class="container">
+       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+       </a>
+       <a class="brand" href="http://bootswatch.com/">Bootswatch</a>
+       <div class="nav-collapse" id="main-menu">
+        <ul class="nav" id="main-menu-left">
+          <li><a href="#">Index</a></li>
+          <li><a href="styles.html">Style</a></li>
+        </ul>    
+       </div>
+     </div>
+   </div>
+ </div>
+
+<div class="container">
+  <h1 class="center" style="padding-left:450px">Current Events</h1>  
+
+  <button onclick="getLocation()">Find Me!</button>    
+
+    <div id="locationHolder"></div>   
+    <p id="message"></p> 
+ 
+    <script language="JavaScript">
+        var message = document.getElementById("message");
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            }
+            else { message.innerHTML = "Geolocation is not supported by this browser."; }
+        }
+ 
+        function showPosition(position) {
+            
+            var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+
+            var mapOptions = {
+              center: myLatlng,
+              zoom: 14,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"),
+                mapOptions);            
+ 
+            document.getElementById("locationHolder").innerHTML = 
+                        "Your current location is: (" + position.coords.latitude + ", " + position.coords.longitude + ")";   
+
+            //put the marker             
+             var marker = new google.maps.Marker({
+                position: myLatlng,
+                animation: google.maps.Animation.DROP,
+                map: map,
+                title:"You are Here!"
+            });    
+            google.maps.event.addListener(marker, 'click', toggleBounce);     
+
+            function toggleBounce() {
+
+              if (marker.getAnimation() != null) {
+                marker.setAnimation(null);
+              } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+              }
+            }
+                        
+        }
+ 
+        function showError(error) {            
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    message.innerHTML = "User denied the request for Geolocation."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message.innerHTML = "Location information is unavailable at this time."
+                    break;
+                case error.TIMEOUT:
+                    message.innerHTML = "The request to get user location timed out."
+                    break;
+                case error.UNKNOWN_ERROR:
+                    message.innerHTML = "An unknown error occurred. Try again later."
+                    break;
+            }
+        }
+
+        //retrieve events        
+            $.ajax({
+              type: 'POST',         
+              url: 'getEvents.php',
+              data: {action: 'combo'},
+              success: function(data) {         
+                data.each(data,function(index, value){
+                    alert(index);
+                });
+              }     
+        });        
+    </script>  
+</div><!-- /container -->
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->    
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/application.js"></script>
+    <script src="js/bootswatch.js"></script>
+
+
+  
+
+</body></html>
