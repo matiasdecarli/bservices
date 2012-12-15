@@ -9,7 +9,7 @@
 	
 	conexion($link);	
 
-	$sql = "SELECT * FROM events";
+	$sql = "SELECT * FROM event";
 	$res = mysql_query($sql);
 
 	while ($fila = mysql_fetch_array($res)){
