@@ -26,7 +26,14 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsFBlXOlKir-wVms5iGYt4-zOi1dzV6Tg&sensor=false">
     </script>
     <script type="text/javascript">
-
+    // Map default Options
+    var  mapOptions = {
+                  center: new google.maps.LatLng(18.312811,2.8125),
+                  zoom: 2,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                }; 
+    // Premature Map Creation
+    var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);  
         //retrieve events        
             $.ajax({
               type: 'POST',         
@@ -34,14 +41,7 @@
               dataType: 'json',
               data: {action: 'combo'},
               success: function(data) {     
-
-                var  mapOptions = {
-                  center: new google.maps.LatLng(18.312811,2.8125),
-                  zoom: 2,
-                  mapTypeId: google.maps.MapTypeId.ROADMAP
-                };        
-              
-                var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);                        
+                                      
                 console.log(data);
                 $.each(data,function(id,val){  
                     
@@ -50,11 +50,6 @@
 
                     var myLatlng = new google.maps.LatLng(latLang[0],latLang[1]);
 
-                    var mapOptions = {
-                      center: myLatlng,
-                      zoom: 2,
-                      mapTypeId: google.maps.MapTypeId.ROADMAP
-                    };
                               
                     //put the marker             
                     var marker = new google.maps.Marker({
