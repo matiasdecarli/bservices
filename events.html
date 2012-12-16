@@ -128,6 +128,7 @@
         <script src="js/jquery.min.js"></script>
     <script type="text/javascript">
 
+        //find the event in the cookie, using the hash in the url
         function getEvent(){
 
           var hash = document.location.hash;        
@@ -144,11 +145,13 @@
           return val;
         }
 
+        //obtain and parse the cookie
         function getEventArray(){
           var cookie = document.cookie.split(";");
           return $.parseJSON(cookie[0]);                
         }
           
+        //obtain tweets  
         $.ajax({
             type: 'GET',         
             url: 'http://search.twitter.com/search.json',
@@ -158,6 +161,7 @@
                 var event = getEvent();
                 var location = event.location.split(",");
 
+                //create and locate the map in the event
                 var mapOptions = {
                   center: new google.maps.LatLng(location[0], location[1]),
                   zoom: 12,
@@ -166,14 +170,15 @@
                 var map = new google.maps.Map(document.getElementById("map_canvas"),
                     mapOptions);
 
+                //for each service, put markers
                 $.each(data.results, function(id,val){                    
                     var tweet = val.text;
-                    //var re = /(^|\s)#(\w+)/g;
+                    
                     var re = /(-[0-9]+|\w+)/g;
                     var parsed = tweet.match(re);
 
                     console.log(parsed);                           
-                    //var location = val.split(";");                    
+                    
                     var myLatlng = new google.maps.LatLng(parsed[3] + '.' + parsed[4], parsed[5] + '.' + parsed[6]);
 
                     var mapOptions = {
@@ -197,8 +202,6 @@
                         icon: image,
                         title:val.name
                     });  
-
-                    
 
                 });                
             }
