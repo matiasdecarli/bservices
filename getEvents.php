@@ -9,12 +9,14 @@
 	
 	conexion($link);	
 
+	//get events
 	$sql = " SELECT e.id, e.name, e.location, e.place, e_t.name as event FROM event as e left join event_type as e_t on e.id=e_t.id ";
 
 	$res = mysql_query($sql);
 
 	while ($fila = mysql_fetch_array($res)){			
 
+		//get associated hashtags
 		$sql2= 'SELECT *
 				FROM hashtag as h 
 				     join event_hash as e_h on e_h.id_hashtag = h.id
@@ -30,7 +32,8 @@
 
 		}		     
 		$hashtags = substr($hashtags,0,strlen($hashtags)-1);
-	
+		
+		//prepare to encode
 		$data[]= array('name' => $fila['name'], 'location' => $fila['location'], 'place' => $fila['place'],'event' => $fila['event'],'hashtags' =>  $hashtags );
 
 	}	
